@@ -1,5 +1,11 @@
 import { Router } from "express";
-import { select, insert, remove, getCriminalCases } from "./queries";
+import {
+  select,
+  insert,
+  remove,
+  createEffort,
+  getCriminalCases
+} from "./queries";
 
 const router = Router();
 router.get("/police", select("policemen"));
@@ -11,7 +17,8 @@ router.get("/effort", select("effort"));
 router.post("/police", insert("policemen"));
 router.post("/cases", insert("cases"));
 router.post("/criminals", insert("criminals"));
-router.post("/effort", insert("effort"));
+router.post("/effort", createEffort);
+router.post("/effort/old", insert("effort"));
 
 router.put("/police", insert("policemen"));
 router.put("/cases", select("cases"));

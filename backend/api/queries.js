@@ -1,3 +1,4 @@
+import "babel-polyfill";
 import database from "./database";
 
 export const select = table => (req, res, next) => {
@@ -7,25 +8,9 @@ export const select = table => (req, res, next) => {
   });
 };
 
-export const insert = table => (req, res, next) => {
-  const questionMark = () => {
-    const n = Object.keys(req.body).length;
-    const string = "?,";
-
-    const output = string.repeat(n);
-    return output.substring(0, output.length - 1);
-  };
-
-  database.query(
-    `INSERT INTO ${table} (${Object.keys(
-      req.body
-    )}) VALUES (${questionMark()})`,
-    [...Object.values(req.body)],
-    (error, results) => {
-      if (error) return next(error);
-      res.send(results);
-    }
-  );
+export const insert = table => async (req, res, next) => {
+  await insertQuery(table, req.body);
+  res.send({});
 };
 
 export const remove = table => (req, res, next) => {
@@ -57,4 +42,43 @@ export const getCriminalCases = (req, res, next) => {
       );
     }
   );
+};
+
+const questionMark = object => {
+  const n = Object.keys(object).length;
+  const string = "?,";
+
+  const output = string.repeat(n);
+  return output.substring(0, output.length - 1);
+};
+
+async function insertQuery(table, object) {
+  return new Promise((resolve, reject) => {
+    database.query(
+      `INSERT INTO ${table} (${Object.keys(object)}) VALUES (${questionMark(
+        object
+      )})`,
+      [...Object.values(object)],
+      (error, results) => {
+        if (error) reject(error);
+        resolve({ error, results });
+      }
+    );
+  });
+}
+
+export const createEffort = async (req, res, next) => {
+  const { criminal, cases, effort } = req.body;
+
+  try {
+    const insertedCriminal = await insertQuery("criminals", criminal);
+    await cases.map(_case => insertQuery("cases", _case));
+    await insertQuery("effort", {
+      ...effort,
+      criminalId: insertedCriminal.results.insertId
+    });
+    res.send({ success: true, error: false });
+  } catch (error) {
+    next(error);
+  }
 };

@@ -43,7 +43,9 @@ const PoliceTable = React.lazy(() => import("./components/Police/table"));
 const PoliceForm = React.lazy(() => import("./components/Police/form"));
 
 const CriminalTable = React.lazy(() => import("./components/Criminal/table"));
+const Effort = React.lazy(() => import("./components/Effort/export"));
 const EffortForm = React.lazy(() => import("./components/Effort/form"));
+const EffortPrint = React.lazy(() => import("./components/Effort/print"));
 
 // https://github.com/ReactTraining/react-router/tree/master/packages/react-router-config
 const routes = [
@@ -61,10 +63,22 @@ const routes = [
     component: CriminalTable
   },
   {
+    path: "/effort",
+    exact: true,
+    name: "مجهود",
+    component: Effort
+  },
+  {
     path: "/effort/add",
     exact: true,
     name: "إضافة مجهود",
     component: EffortForm
+  },
+  {
+    path: "/effort/print",
+    exact: true,
+    name: "طباعة مجهود",
+    component: EffortPrint
   },
   { path: "/", exact: true, name: "Home" },
   { path: "/dashboard", name: "Dashboard", component: Dashboard },

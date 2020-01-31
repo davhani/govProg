@@ -72,7 +72,12 @@ export const createEffort = async (req, res, next) => {
 
   try {
     const insertedCriminal = await insertQuery("criminals", criminal);
-    await cases.map(_case => insertQuery("cases", _case));
+    await cases.map(_case =>
+      insertQuery("cases", {
+        ..._case,
+        criminalId: insertedCriminal.results.insertId
+      })
+    );
     await insertQuery("effort", {
       ...effort,
       criminalId: insertedCriminal.results.insertId

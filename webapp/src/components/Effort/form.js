@@ -273,13 +273,29 @@ const Case = ({ index }) => {
           <Input
             type="select"
             id="busted"
-            placeholder="تم تسليمه/إعلانه"
+            placeholder="تم تسليمه / إعلانه"
             required
             style={{ textAlign: "right" }}
             onChange={onChange}
           >
             <option value="1">تم تسليمه</option>
             <option value="0">تم إعلانه</option>
+          </Input>
+        </FormGroup>
+        <FormGroup>
+          <Label htmlFor="caseType">نوع الحكم</Label>
+          <Input
+            type="select"
+            id="caseType"
+            placeholder="نوع الحكم"
+            required
+            style={{ textAlign: "right" }}
+            onChange={onChange}
+          >
+            <option value="أحكام جزئية">أحكام جزئية </option>
+            <option value="مخدرات">مخدرات</option>
+            <option value="تلبس">تلبس</option>
+            <option value="جنايات">جنايات</option>
           </Input>
         </FormGroup>
         <FormGroup>
